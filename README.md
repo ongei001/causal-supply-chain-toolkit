@@ -4,7 +4,20 @@ A Python toolkit for causal inference methods for evaluating logistics intervent
 
 ## Overview
 
-This toolkit implements causal inference methods to help supply chain analysts and data scientists evaluate the impact of interventions. By leveraging causal analysis, you can go beyond correlation and understand the true drivers of efficiency, delays, and costs in your logistics network.
+Global supply chains are under increasing strain from climate change and geopolitical shocks. Traditional machine learning models often fail to answer "what-if" questions about interventions. This toolkit fills that gap by providing a pipeline for **Causal Supply Chain Analysis**.
+
+It allows you to:
+1.  **Ingest** supply chain data (shipments, weather, congestion).
+2.  **Discover** causal relationships (e.g., Does weather cause congestion, or is it just correlated?).
+3.  **Estimate** the true effect of interventions (e.g., How much does rerouting reduce delay?).
+4.  **Simulate** scenarios to optimize decisions under risk.
+
+## Features
+
+-   **Data Loading**: Utilities for synthetic data generation and CSV loading.
+-   **Causal Discovery**: Heuristic and algorithm-based graph learning.
+-   **Effect Estimation**: Wrappers around `DoWhy` for robust causal inference.
+-   **Simulation**: "What-if" scenario analysis engine.
 
 ## Getting Started
 
@@ -18,32 +31,41 @@ cd causal-supply-chain-toolkit
 pip install -r requirements.txt
 ```
 
+### Quick Start
+
+See `notebooks/01_causal_walkthrough.ipynb` for a complete interactive tutorial.
+
+Or run the example script:
+
+```bash
+python examples/intervention_case.py
+```
+
 ### Usage Example
 
-Here is a minimal example of how to use the toolkit to estimate the effect of an intervention:
-
 ```python
-from causal_toolkit import CausalModel
-import pandas as pd
+from utils.data_loader import generate_synthetic_data
+from causal.estimation import EffectEstimator
 
-# Load your data
-data = pd.read_csv('data/processed/supply_chain_data.csv')
+# 1. Load Data
+data = generate_synthetic_data()
 
-# Initialize the model
-model = CausalModel(data, treatment='expedited_shipping', outcome='delivery_delay')
+# 2. Estimate Effect
+estimator = EffectEstimator(data)
+estimate = estimator.estimate_effect(
+    treatment='route_choice',
+    outcome='delivery_delay',
+    common_causes=['port_congestion', 'weather_shock']
+)
 
-# Estimate the effect
-effect = model.estimate_effect()
-
-print(f"Estimated effect of expedited shipping on delay: {effect:.2f} days")
-# Output: Estimated effect of expedited shipping on delay: -5.20 days
+print(f"Effect: {estimate.value}")
 ```
 
 ## Use Cases
 
-- **Forecasting effect of changing shipment routes**: Understand how route changes impact delivery times.
-- **Identifying bottlenecks via causal graphs**: Discover hidden dependencies in your supply chain.
-- **Simulating interventions on lead times**: Predict the outcome of process improvements before implementing them.
+-   **Forecasting effect of changing shipment routes**: Understand how route changes impact delivery times.
+-   **Identifying bottlenecks via causal graphs**: Discover hidden dependencies in your supply chain.
+-   **Simulating interventions on lead times**: Predict the outcome of process improvements before implementing them.
 
 ## Contributing
 
@@ -55,4 +77,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## References
 
-- Wyrembek et al. (2024). "Causal ML for Supply Chain Risk".
+-   Wyrembek et al. (2024). "What if? Causal Machine Learning in Supply Chain Risk Management".
+-   Cevik & Gwon (2024). "Weather Anomalies, Supply Chain Pressures and Inflation".

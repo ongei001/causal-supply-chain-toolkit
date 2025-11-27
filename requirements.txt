@@ -5,3 +5,7 @@ causalml
 scikit-learn
 matplotlib
 jupyter
+dowhy
+econml
+networkx
+statsmodels
