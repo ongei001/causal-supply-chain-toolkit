@@ -1,0 +1,7 @@
+pandas
+numpy
+scipy
+causalml
+scikit-learn
+matplotlib
+jupyter
